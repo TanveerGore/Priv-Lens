@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PrivLens</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!--  HEADER                                     -->
+  <!-- ═══════════════════════════════════════════ -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-ring">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.35C16.5 22.15 20 17.25 20 12V6L12 2z" fill="url(#shieldGrad)" stroke="none"/>
+          <path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs>
+            <linearGradient id="shieldGrad" x1="4" y1="2" x2="20" y2="23" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#818CF8"/>
+              <stop offset="100%" stop-color="#6366F1"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="header-title">
+        <span class="brand-name">PrivLens</span>
+        <span class="brand-sub">AI Privacy Guardian</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="refresh-btn" id="refreshBtn" title="Re-analyze">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+          <path d="M21 3v5h-5"/>
+          <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+          <path d="M8 16H3v5"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!--  LOADING STATE                              -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="loadingState" class="loading-state">
+    <div class="scan-animation">
+      <div class="scan-ring ring-1"></div>
+      <div class="scan-ring ring-2"></div>
+      <div class="scan-ring ring-3"></div>
+      <div class="scan-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.35C16.5 22.15 20 17.25 20 12V6L12 2z" fill="url(#scanShield)"/>
+          <defs>
+            <linearGradient id="scanShield" x1="4" y1="2" x2="20" y2="23">
+              <stop offset="0%" stop-color="#818CF8"/>
+              <stop offset="100%" stop-color="#6366F1"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+    <p class="loading-text">Analyzing privacy policy<span class="dots"></span></p>
+    <p class="loading-sub" id="loadingStatus">Detecting policy page…</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!--  MAIN CONTENT                               -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="mainContent" class="main-content hidden">
+
+    <!-- SITE IDENTITY -->
+    <div class="site-banner">
+      <div class="site-favicon" id="siteFavicon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+      </div>
+      <div class="site-info">
+        <span class="site-domain" id="siteDomain">Loading…</span>
+        <span class="site-label">Current website</span>
+      </div>
+      <div class="risk-badge" id="riskBadge">—</div>
+    </div>
+
+    <!-- SCORE RING -->
+    <div class="score-section">
+      <div class="score-ring-wrap">
+        <svg class="score-ring" width="130" height="130" viewBox="0 0 130 130">
+          <!-- Track -->
+          <circle cx="65" cy="65" r="54" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10"/>
+          <!-- Progress -->
+          <circle id="scoreArc" cx="65" cy="65" r="54"
+            fill="none"
+            stroke="url(#scoreGrad)"
+            stroke-width="10"
+            stroke-linecap="round"
+            stroke-dasharray="339.29"
+            stroke-dashoffset="339.29"
+            transform="rotate(-90 65 65)"
+          />
+          <defs>
+            <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop id="gradStop1" offset="0%" stop-color="#EF4444"/>
+              <stop id="gradStop2" offset="100%" stop-color="#FACC15"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="score-center">
+          <span class="score-num" id="scoreNum">—</span>
+          <span class="score-denom">/10</span>
+        </div>
+      </div>
+      <div class="score-meta">
+        <span class="score-label">Privacy Score</span>
+        <span class="score-verdict" id="scoreVerdict">Scanning…</span>
+        <div class="score-bar-wrap">
+          <div class="score-bar-track">
+            <div class="score-bar-fill" id="scoreBarFill"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIVIDER -->
+    <div class="section-divider"></div>
+
+    <!-- AI SUMMARY CARD -->
+    <div class="card ai-card" id="summaryCard">
+      <div class="card-header">
+        <div class="card-icon ai-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/>
+          </svg>
+        </div>
+        <span class="card-title">AI Summary</span>
+        <span class="card-tag">Generated</span>
+      </div>
+      <p class="ai-summary-text" id="aiSummary">Analyzing policy content with AI…</p>
+    </div>
+
+    <!-- PRIVACY RISKS CARD -->
+    <div class="card risks-card" id="risksCard">
+      <div class="card-header">
+        <div class="card-icon risk-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <span class="card-title">Privacy Risks</span>
+        <span class="risk-count" id="riskCount">0</span>
+      </div>
+      <ul class="risk-list" id="riskList">
+        <li class="risk-item skeleton"></li>
+        <li class="risk-item skeleton"></li>
+      </ul>
+    </div>
+
+    <!-- TRACKERS CARD -->
+    <div class="card trackers-card" id="trackersCard">
+      <div class="card-header">
+        <div class="card-icon tracker-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+          </svg>
+        </div>
+        <span class="card-title">Trackers Detected</span>
+        <span class="tracker-count" id="trackerCount">0</span>
+      </div>
+      <div class="tracker-grid" id="trackerGrid">
+        <div class="tracker-empty">Scanning network requests…</div>
+      </div>
+    </div>
+
+    <!-- POLICY MISMATCH WARNING (hidden by default) -->
+    <div class="card mismatch-card hidden" id="mismatchCard">
+      <div class="card-header">
+        <div class="card-icon mismatch-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v11m0 0H5a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2v-4a2 2 0 0 0-2-2H9zm0 0V3"/>
+          </svg>
+        </div>
+        <span class="card-title">Policy vs Reality</span>
+        <span class="mismatch-tag">Mismatch</span>
+      </div>
+      <ul class="mismatch-list" id="mismatchList"></ul>
+    </div>
+
+    <!-- CTA BUTTON -->
+    <a class="cta-btn" id="reportBtn" href="#" target="_blank">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="16" y1="13" x2="8" y2="13"/>
+        <line x1="16" y1="17" x2="8" y2="17"/>
+        <polyline points="10 9 9 9 8 9"/>
+      </svg>
+      View Full Privacy Report
+    </a>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!--  ERROR STATE                                -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="errorState" class="error-state hidden">
+    <div class="error-icon">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+    </div>
+    <p class="error-title" id="errorTitle">Analysis failed</p>
+    <p class="error-msg" id="errorMsg">Could not find or analyze the privacy policy.</p>
+    <button class="retry-btn" id="retryBtn">Try again</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
